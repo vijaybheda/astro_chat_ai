@@ -17,6 +17,7 @@ class ThemeColor {
       canvasColor: ThemeColors.backgroundColor,
       iconTheme: IconThemeData(color: ThemeColors.black10),
       inputDecorationTheme: getInputDecorationTheme(isDark: isDark),
+      appBarTheme: const AppBarTheme(color: ThemeColors.primaryColor),
       sliderTheme: const SliderThemeData(
         thumbShape: RoundSliderThumbShape(
             enabledThumbRadius: 5, disabledThumbRadius: 5),
