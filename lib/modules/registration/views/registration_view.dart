@@ -6,6 +6,7 @@ import 'package:astro_chat_ai/theme/colors.dart';
 import 'package:astro_chat_ai/theme/text_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -65,7 +66,7 @@ class RegistrationScreen extends GetView<RegistrationController> {
                         DatePicker.showDatePicker(
                           context,
                           showTitleActions: true,
-                          minTime: DateTime(1999, 1, 1),
+                          minTime: DateTime(1950, 1, 1),
                           maxTime: DateTime.now(),
                           currentTime: DateTime.now(),
                           theme: DatePickerTheme(
@@ -143,6 +144,69 @@ class RegistrationScreen extends GetView<RegistrationController> {
                     ),
                   ),
                 ),
+              ),
+              const SizedBox(height: 16.0),
+
+              /// Latitude
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: controller.latController,
+                      keyboardType: TextInputType.number,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 0, vertical: 12),
+                        hintText: "Enter Latitude",
+                        labelText: 'Latitude',
+                        hintStyle: AppFontStyle.bodyMedium?.copyWith(
+                          color: ThemeColors.black10.withOpacity(0.18),
+                        ),
+                        filled: false,
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: ThemeColors.black10.withOpacity(0.18),
+                          ),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: ThemeColors.black10.withOpacity(0.18),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  /// Longitude
+                  Expanded(
+                    child: TextFormField(
+                      controller: controller.longController,
+                      keyboardType: TextInputType.number,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 0, vertical: 12),
+                        hintText: "Enter Longitude",
+                        labelText: 'Longitude',
+                        hintStyle: AppFontStyle.bodyMedium?.copyWith(
+                          color: ThemeColors.black10.withOpacity(0.18),
+                        ),
+                        filled: false,
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: ThemeColors.black10.withOpacity(0.18),
+                          ),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: ThemeColors.black10.withOpacity(0.18),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16.0),
 
@@ -247,22 +311,28 @@ class RegistrationScreen extends GetView<RegistrationController> {
               ),
 
               const SizedBox(height: 16.0),
-              Center(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    textStyle: const TextStyle(fontSize: 20),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: Center(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      textStyle: const TextStyle(fontSize: 20),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
+                    onPressed: () {
+                      UserData? validUserData = getUserData();
+                      if (validUserData != null) {
+                        Get.toNamed(RoutesName.chartImage,
+                            arguments: {'UserData': validUserData});
+                      }
+                    },
+                    child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
+                        child: const Text('Submit')),
                   ),
-                  onPressed: () {
-                    UserData? validUserData = getUserData();
-                    if (validUserData != null) {
-                      Get.toNamed(RoutesName.chartImage,
-                          arguments: {'UserData': validUserData});
-                    }
-                  },
-                  child: const Text('Submit'),
                 ),
               ),
             ],
@@ -285,15 +355,58 @@ class RegistrationScreen extends GetView<RegistrationController> {
     UserData? userData = UserData();
 
     if (controller.dobController.text.isEmpty) {
+      showSnackBar(
+          title: 'Date Of Birth', subTitle: 'Please select Date of birth.');
       return null;
     }
+    if (controller.placeOfBirthController.text.isEmpty) {
+      showSnackBar(
+          title: 'Place Of Birth', subTitle: 'Please select Place of birth.');
+      return null;
+    }
+    if (controller.latController.text.isEmpty) {
+      showSnackBar(
+          title: 'Latitude', subTitle: 'Please enter birthplace Latitude.');
+      return null;
+    }
+    // if (!controller.latLongRegex.hasMatch(controller.latController.text)) {
+    //   showSnackBar(
+    //       title: 'Latitude', subTitle: 'Please enter valid Latitude.');
+    //   return null;
+    // }
+    if (controller.longController.text.isEmpty) {
+      showSnackBar(
+          title: 'Longitude', subTitle: 'Please enter birthplace Longitude.');
+      return null;
+    }
+
+    // if (!controller.latLongRegex.hasMatch(controller.longController.text)) {
+    //   showSnackBar(
+    //       title: 'Longitude', subTitle: 'Please enter valid Longitude.');
+    //   return null;
+    // }
     if (controller.timeOfBirthController.text.isEmpty) {
+      showSnackBar(
+          title: 'Time Of Birth', subTitle: 'Please select Time of birth.');
       return null;
     }
     userData = userData.copyWith(
       timeOfBirth: controller.time,
       dob: controller.dob,
+      placeOfBirth: controller.placeOfBirthController.text,
+      birthplaceLat: controller.latController.text,
+      birthplaceLong: controller.longController.text,
     );
     return userData;
+  }
+
+  void showSnackBar({required String title, required String subTitle}) {
+    Get.closeAllSnackbars();
+    Get.snackbar(
+      title,
+      subTitle,
+      colorText: Colors.white,
+      backgroundColor: ThemeColors.primaryColor.withOpacity(.55),
+    );
   }
 }

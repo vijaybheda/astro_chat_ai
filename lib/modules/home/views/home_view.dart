@@ -1,3 +1,4 @@
+import 'package:astro_chat_ai/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -19,7 +20,7 @@ class HomeScreen extends GetView<HomeController> {
                 const SizedBox(width: 8),
                 Expanded(
                     child: makeCard(Icons.text_fields_sharp, "Text completion",
-                        Colors.deepPurpleAccent.withOpacity(0.5), () {})),
+                        ThemeColors.primaryColor.withOpacity(0.5), () {})),
                 const SizedBox(width: 8),
               ],
             ),

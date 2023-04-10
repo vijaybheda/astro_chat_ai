@@ -8,14 +8,19 @@ class UserData {
   TimeOfDay? timeOfBirth;
   String? phoneNo;
   UserGender? gender;
+  String? birthplaceLat;
+  String? birthplaceLong;
 
-  UserData(
-      {this.name,
-      this.placeOfBirth,
-      this.dob,
-      this.timeOfBirth,
-      this.phoneNo,
-      this.gender});
+  UserData({
+    this.name,
+    this.placeOfBirth,
+    this.dob,
+    this.timeOfBirth,
+    this.phoneNo,
+    this.gender,
+    this.birthplaceLat,
+    this.birthplaceLong,
+  });
 
   UserData.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -24,6 +29,8 @@ class UserData {
     timeOfBirth = json['timeOfBirth'];
     phoneNo = json['phoneNo'];
     gender = json['gender'];
+    birthplaceLat = json['birthplaceLat'];
+    birthplaceLong = json['birthplaceLong'];
   }
 
   Map<String, dynamic> toJson() {
@@ -34,6 +41,8 @@ class UserData {
     data['timeOfBirth'] = timeOfBirth;
     data['phoneNo'] = phoneNo;
     data['gender'] = gender;
+    data['birthplaceLat'] = birthplaceLat;
+    data['birthplaceLong'] = birthplaceLong;
     return data;
   }
 
@@ -44,6 +53,8 @@ class UserData {
     TimeOfDay? timeOfBirth,
     String? phoneNo,
     UserGender? gender,
+    String? birthplaceLat,
+    String? birthplaceLong,
   }) {
     return UserData(
       name: name ?? this.name,
@@ -52,6 +63,8 @@ class UserData {
       timeOfBirth: timeOfBirth ?? this.timeOfBirth,
       phoneNo: phoneNo ?? this.phoneNo,
       gender: gender ?? this.gender,
+      birthplaceLat: birthplaceLat ?? this.birthplaceLat,
+      birthplaceLong: birthplaceLong ?? this.birthplaceLong,
     );
   }
 }
